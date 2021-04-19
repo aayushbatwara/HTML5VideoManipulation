@@ -14,6 +14,10 @@ window.addEventListener('DOMContentLoaded', function() {
 
     myVideo.autoplay = true; myVideo.muted = true; myVideo.loop = true; myVideo.preload = "auto"
 
+    // test button
+    let testButton = document.getElementById("myButton");
+    testButton.addEventListener("click",function(){document.body.style.background="red"})
+
 
 
 });
