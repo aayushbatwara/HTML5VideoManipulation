@@ -1,3 +1,5 @@
+let myCanvas, myContext;
+
 window.addEventListener('DOMContentLoaded', function() {
     let myVideo = document.getElementById('myVideo');
     myVideo.addEventListener('play', function() {
@@ -19,7 +21,6 @@ window.addEventListener('DOMContentLoaded', function() {
     })
 
 
-    let myCanvas, myContext;
     myCanvas = document.getElementById('myCanvas');
     myContext = myCanvas.getContext('2d');
     // start animation when video starts playing
