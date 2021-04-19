@@ -1,4 +1,6 @@
-let myCanvas, myContext;
+let myCanvas, myContext, x, y;
+let lastUpdate = Date.now();
+let i = 0;
 
 window.addEventListener('DOMContentLoaded', function() {
     let myVideo = document.getElementById('myVideo');
@@ -31,7 +33,13 @@ window.addEventListener('DOMContentLoaded', function() {
 });
 
 function drawVideo() {
-    myContext.drawImage(myVideo, 0, 0,
-                        myVideo.videoWidth, myVideo.videoHeight);
+    if ((Date.now() - lastUpdate) > 1000){
+        lastUpdate = Date.now();
+        i++;
+        i = i%16;
+    }
+    x = (i%4)*160;
+    y = Math.floor(i/4)*90;
+    myContext.drawImage(myVideo, x, y, 160, 90);
     requestAnimationFrame(drawVideo); // draw next frame
   }
