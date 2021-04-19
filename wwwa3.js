@@ -30,6 +30,25 @@ window.addEventListener('DOMContentLoaded', function() {
     requestAnimationFrame(drawVideo);
     }, false);
 
+    let myDragDiv = document.getElementById('myDragDiv');
+    let myDropDiv = document.getElementById('myDropDiv');
+    myDragDiv.addEventListener('dragstart', function(event) {
+      console.log("Drag started.");
+  }, false);
+    myDropDiv.addEventListener('dragover', function(event) {
+      event.preventDefault();
+      console.log("Drag over at " +
+                  event.offsetY + ", " + event.offsetY + ".");
+    }, false);
+    myDropDiv.addEventListener('dragleave', function(event) {
+      event.preventDefault();
+      console.log("Drag leave.");
+    }, false);
+  myDropDiv.addEventListener('drop', function(event) {
+    event.preventDefault();
+    console.log("Drop at " +event.offsetY + ", " + event.offsetY + ".");
+    }, false);
+
 });
 
 // function drawVideo() {

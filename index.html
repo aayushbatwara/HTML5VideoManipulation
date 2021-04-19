@@ -6,11 +6,19 @@
         rel="stylesheet">
   <link href="style.css" rel="stylesheet">
   <script type="text/javascript" src="wwwa3.js"></script>
+  <style>
+    #myDragDiv, #myDropDiv {
+      border: 1px solid black; width: 200px; height: 200px;
+} </style>
 </head>
 <body>
   <!-- TEST BUTTON -->
   <section>
     <button id="myButton"></button>
+  </section>
+  <!-- TESTING DRAG / DROP -->
+  <section>
+    <div id="myDragDiv" draggable="true">Drag me</div>   <div id="myDropDiv">Drop here</div>
   </section>
   <section>
     <video id="myVideo" width="640"> 
