@@ -31,13 +31,16 @@ window.addEventListener('DOMContentLoaded', function() {
     }, false);
 
     let grayscaleIcon = document.getElementById('grayscale');
+    grayscaleIcon.draggable = true;
     grayscaleIcon.addEventListener('dragstart', function(event) {
       console.log("Drag started.");
   }, false);
     myCanvas.addEventListener('dragover', function(event) {
       event.preventDefault();
-      console.log("Drag over at " +
-                  event.offsetY + ", " + event.offsetY + ".");
+    // call a function and pass it argument "testEffect", and event
+    // find the base point of the pane that is being hovered on
+    // retrace that image
+      console.log("Drag over at " + event.offsetX + ", " + event.offsetY + ".");
     }, false);
     myCanvas.addEventListener('dragleave', function(event) {
       event.preventDefault();
@@ -45,7 +48,7 @@ window.addEventListener('DOMContentLoaded', function() {
     }, false);
   myCanvas.addEventListener('drop', function(event) {
     event.preventDefault();
-    console.log("Drop at " +(event.offsetY- myCanvas.getBoundingClientRect().left) + ", " + (event.offsetY-myCanvas.getBoundingClientRect().top) + ".");
+    console.log("Drop at " +(event.offsetX) + ", " + (event.offsetY) + ".");
     
     }, false);
 
@@ -63,15 +66,21 @@ window.addEventListener('DOMContentLoaded', function() {
 //     requestAnimationFrame(drawVideo); // draw next frame
 //   }
 function drawVideo() {
-const imageData = extractFrame();
-const newImageData = manipulateData(imageData);
-drawFrame(newImageData);
-requestAnimationFrame(drawVideo); // draw next frame
+    if ((Date.now() - lastUpdate) > 1000){
+        lastUpdate = Date.now();
+        i++;
+        i = i%16;
+    }
+    x = (i%4)*160;
+    y = Math.floor(i/4)*90;
+    const imageData = extractFrame(x,y);
+    const newImageData = manipulateData(imageData);
+    drawFrame(newImageData, x,y);
+    requestAnimationFrame(drawVideo); // draw next frame
 }
 
-function extractFrame() {
-    myContext.drawImage(myVideo, 0, 0,
-                        myVideo.videoWidth, myVideo.videoHeight);
+function extractFrame(x,y) {
+    myContext.drawImage(myVideo, x, y, 160, 90);
     const frame = myContext.getImageData(0, 0,
                         myVideo.videoWidth, myVideo.videoHeight);
     return new Uint8ClampedArray(frame.data);
@@ -94,9 +103,8 @@ function manipulateData(imageData) {
 }
 
 // draw image data onto frame
-function drawFrame(imageData) {
-    const frame = myContext.getImageData(0, 0,
-                          myVideo.videoWidth, myVideo.videoHeight);
+function drawFrame(imageData, x, y) {
+    const frame = myContext.getImageData(x, y, myVideo.videoWidth, myVideo.videoHeight);
     for (let i = 0; i < imageData.length/4; i++) {
       const r = imageData[i * 4 + 0];
       const g = imageData[i * 4 + 1];
@@ -107,5 +115,5 @@ function drawFrame(imageData) {
       frame.data[i * 4 + 2] = b;
       frame.data[i * 4 + 3] = a;
   }
-    myContext.putImageData(frame, 0, 0);
+    myContext.putImageData(frame, x, y);
   }
