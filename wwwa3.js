@@ -19,10 +19,9 @@ window.addEventListener('DOMContentLoaded', function() {
     })
 
 
-    let myCanvas, myContext, myVideo;
+    let myCanvas, myContext;
     myCanvas = document.getElementById('myCanvas');
     myContext = myCanvas.getContext('2d');
-    myVideo = document.getElementById('myVideo');
     // start animation when video starts playing
     myVideo.addEventListener('play', function() {
     requestAnimationFrame(drawVideo);
