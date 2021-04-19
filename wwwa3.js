@@ -1,3 +1,5 @@
+console.log("hi");
+
 window.addEventListener('DOMContentLoaded', function() {
     let myVideo = document.getElementById('myVideo');
     myVideo.addEventListener('play', function() {
