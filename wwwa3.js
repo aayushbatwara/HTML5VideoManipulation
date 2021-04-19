@@ -75,7 +75,8 @@ function drawVideo() {
     y = Math.floor(i/4)*90;
     const imageData = extractFrame(x,y);
     const newImageData = manipulateData(imageData);
-    drawFrame(newImageData, x,y);
+    // drawFrame(newImageData, x,y);
+    drawFrame(imageData,x,y);
     requestAnimationFrame(drawVideo); // draw next frame
 }
 
@@ -88,17 +89,17 @@ function extractFrame(x,y) {
 
 function manipulateData(imageData) {
     const newImageData = new Uint8ClampedArray(imageData.length);
-//     for (let i = 0; i < imageData.length/4; i++) {
-//       const r = imageData[i * 4 + 0];
-//       const g = imageData[i * 4 + 1];
-//       const b = imageData[i * 4 + 2];
-//       const a = imageData[i * 4 + 3];
-//       // swap red and blue
-//       newImageData[i * 4 + 0] = b;
-//       newImageData[i * 4 + 1] = g;
-//       newImageData[i * 4 + 2] = r;
-//       newImageData[i * 4 + 3] = a;
-//   }
+    for (let i = 0; i < imageData.length/4; i++) {
+      const r = imageData[i * 4 + 0];
+      const g = imageData[i * 4 + 1];
+      const b = imageData[i * 4 + 2];
+      const a = imageData[i * 4 + 3];
+      // swap red and blue
+      newImageData[i * 4 + 0] = b;
+      newImageData[i * 4 + 1] = g;
+      newImageData[i * 4 + 2] = r;
+      newImageData[i * 4 + 3] = a;
+  }
     return newImageData;
 }
 
