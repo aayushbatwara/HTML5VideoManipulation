@@ -30,23 +30,23 @@ window.addEventListener('DOMContentLoaded', function() {
     requestAnimationFrame(drawVideo);
     }, false);
 
-    let myDragDiv = document.getElementById('myDragDiv');
-    let myDropDiv = document.getElementById('myDropDiv');
-    myDragDiv.addEventListener('dragstart', function(event) {
+    let grayscaleIcon = document.getElementById('grayscale');
+    grayscaleIcon.addEventListener('dragstart', function(event) {
       console.log("Drag started.");
   }, false);
-    myDropDiv.addEventListener('dragover', function(event) {
+    myCanvas.addEventListener('dragover', function(event) {
       event.preventDefault();
       console.log("Drag over at " +
                   event.offsetY + ", " + event.offsetY + ".");
     }, false);
-    myDropDiv.addEventListener('dragleave', function(event) {
+    myCanvas.addEventListener('dragleave', function(event) {
       event.preventDefault();
       console.log("Drag leave.");
     }, false);
-  myDropDiv.addEventListener('drop', function(event) {
+  myCanvas.addEventListener('drop', function(event) {
     event.preventDefault();
-    console.log("Drop at " +event.offsetY + ", " + event.offsetY + ".");
+    console.log("Drop at " +(event.offsetY- myCanvas.getBoundingClientRect().left) + ", " + (event.offsetY-myCanvas.getBoundingClientRect().top) + ".");
+    
     }, false);
 
 });
