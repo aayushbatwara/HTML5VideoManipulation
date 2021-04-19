@@ -73,3 +73,20 @@ function manipulateData(imageData) {
   }
     return newImageData;
 }
+
+// draw image data onto frame
+function drawFrame(imageData) {
+    const frame = myContext.getImageData(0, 0,
+                          myVideo.videoWidth, myVideo.videoHeight);
+    for (let i = 0; i < imageData.length/4; i++) {
+      const r = imageData[i * 4 + 0];
+      const g = imageData[i * 4 + 1];
+      const b = imageData[i * 4 + 2];
+      const a = imageData[i * 4 + 3];
+      frame.data[i * 4 + 0] = r;
+      frame.data[i * 4 + 1] = g;
+      frame.data[i * 4 + 2] = b;
+      frame.data[i * 4 + 3] = a;
+  }
+    myContext.putImageData(frame, 0, 0);
+  }
