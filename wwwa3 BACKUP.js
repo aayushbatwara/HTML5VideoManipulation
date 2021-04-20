@@ -56,7 +56,10 @@ window.addEventListener('DOMContentLoaded', function() {
       event.preventDefault();
       let frameIndex = (Math.floor(event.offsetX / 160)) + 4*(Math.floor(event.offsetY / 90));
       if (frameIndex != hoveredSectionIndex){
+        console.log("frameIndex",frameIndex)
+        console.log(1,hoveredSectionIndex);
         if (hoveredSectionIndex != null){
+          console.log(2,hoveredSectionIndex);
           drawEffect((hoveredSectionIndex%4)*160, Math.floor(hoveredSectionIndex/4)*90,liveEffects[hoveredSectionIndex],false);
         }
         hoveredSectionIndex = frameIndex
@@ -84,44 +87,40 @@ window.addEventListener('DOMContentLoaded', function() {
 
 });
 
+function drawVideo() {
+    if ((Date.now() - lastUpdate) > 1000){
+        lastUpdate = Date.now();
+        if (clearFrames[i] != null){
+          clearFrames[i] = extractFrame(x,y,false) //store clear frame data
+        }
+        i++;
+        i = i%16;
+    }
+    let localX = (i%4)*160;
+    let localY = Math.floor(i/4)*90;
 
-function drawVideo(){
-if ((Date.now() - lastUpdate) > 1000){ // after 1 second has elapsed
-  lastUpdate = Date.now(); // update lastUpdate
-
-  if (clearFrames[i] != null){  //if clear frame for the already exists for current i 
-    oldFrame = myContext.getImageData(x, y, 160, 90); // record oldFrame
-    myContext.drawImage(myVideo, x, y, 160, 90);  // draw a fresh frame from the video (as oldFrame may have effect)
-    newFrame = myContext.getImageData(x, y, 160, 90); // record newFrame
-    clearFrames[i] = new Uint8ClampedArray(newFrame.data) // save new frame into array
-    drawFrame(new Uint8ClampedArray(oldFrame.data),x,y) // redraw old frame onto canvas
+    if (i != hoveredSectionIndex) {
+      if (liveEffects[i] == 1){ // grayscale effect
+        drawEffect(localX,localY,1,true)
+      }
+      else if(liveEffects[i] == -1){ // pixelate
+        drawEffect(localX,localY,-1,true)
+      }
+      else{ // clear
+        myContext.drawImage(myVideo, localX, localY, 160, 90);
+      }
+    }
+    if (i == hoveredSectionIndex){
+      drawEffect(localX,localY,draggedEffect,true);      
+    }
+    requestAnimationFrame(drawVideo); // draw next frame
   }
-  i++;
-  i = i%16;
-  }
 
-  let localX = (i%4)*160;
-  let localY = Math.floor(i/4)*90;
-
-  myEffect = liveEffects[i]         // effect from liveEffects array
-  if (i == hoveredSectionIndex){myEffect = draggedEffect}    // effect should be overridden by dragged effect
-
-  // if effect is clear
-  if (myEffect == 0){
-    myContext.drawImage(myVideo, localX, localY, 160, 90);
-  }
-  else{
-    drawEffect(localX,localY,myEffect,true)
-  }
-
-  requestAnimationFrame(drawVideo); // draw next frame
-  
-}
-
-function drawEffect(mouseX, mouseY, effect, liveDraw, dropped) {
+function drawEffect(mouseX, mouseY, effect,drawNew, dropped) {
     let newX = (Math.floor(mouseX / 160) * 160);
     let newY = (Math.floor(mouseY / 90) * 90);
-    let i = (Math.floor(newX / 160)) + 4*(Math.floor(newY / 90));
+    let i = 4*newY + newX;
+    // let i = (Math.floor(newX / 160)) + 4*(Math.floor(newY / 90));
     if (newX!= x && newY!= y){
       if (dropped == false) {
         drawFrame(oldImageData,x,y);
@@ -130,23 +129,23 @@ function drawEffect(mouseX, mouseY, effect, liveDraw, dropped) {
           x = newX; 
           y = newY;
     }
-    if (liveDraw == false && clearFrames[i] != null){
+    if (drawNew == false && clearFrames[i] != null){
       oldImageData = clearFrames[i]
     }
     else{
-      oldImageData = extractFrame(newX,newY,liveDraw);
+      oldImageData = extractFrame(newX,newY,drawNew);
       clearFrames[i] = oldImageData;
     }
     const newImageData = manipulateData(oldImageData, effect,i);
     drawFrame(newImageData, newX,newY);
     x = newX;
     y = newY;
-  }
+    // requestAnimationFrame(drawVideo); // draw next frame
+}
 
-
-function extractFrame(x,y,liveDraw) {
+function extractFrame(x,y,drawNew) {
     // GET CURRENT VIDEO's PLAYBACK FRAME
-    if(liveDraw){
+    if(drawNew){
       myContext.drawImage(myVideo, x, y, 160, 90);
     }
     const frame = myContext.getImageData(x, y, 160, 90);
